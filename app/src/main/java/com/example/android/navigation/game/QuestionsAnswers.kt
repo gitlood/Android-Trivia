@@ -1,16 +1,10 @@
 package com.example.android.navigation.game
 
-interface QuestionsAnswers {
+object QuestionsAnswers {
     // The first answer is the correct one.  We randomize the answers before showing the text.
     // All questions must have four answers.  We'd want these to contain references to string
     // resources so we could internationalize. (Or better yet, don't define the questions in code...)
-
-
-    // The first answer is the correct one.  We randomize the answers before showing the text.
-    // All questions must have four answers.  We'd want these to contain references to string
-    // resources so we could internationalize. (Or better yet, don't define the questions in code...)
-    val questions: MutableList<Question>
-        get() = mutableListOf(
+    val questions: MutableList<Question> = mutableListOf(
             Question(
                 text = "What is Android Jetpack?",
                 answers = listOf("All of these", "Tools", "Documentation", "Libraries")

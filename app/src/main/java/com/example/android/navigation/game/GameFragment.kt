@@ -10,9 +10,10 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.example.android.navigation.R
 import com.example.android.navigation.databinding.FragmentGameBinding
+import com.example.android.navigation.game.QuestionsAnswers.questions
 import kotlin.math.min
 
-class GameFragment : Fragment(), QuestionsAnswers {
+class GameFragment : Fragment() {
 
     lateinit var currentQuestion: QuestionsAnswers.Question
     lateinit var answers: MutableList<String>
@@ -50,28 +51,39 @@ class GameFragment : Fragment(), QuestionsAnswers {
         val checkedId = binding.questionRadioGroup.checkedRadioButtonId
         // Do nothing if nothing is checked (id == -1)
         if (-1 != checkedId) {
-            var answerIndex = 0
-            when (checkedId) {
-                R.id.secondAnswerRadioButton -> answerIndex = 1
-                R.id.thirdAnswerRadioButton -> answerIndex = 2
-                R.id.fourthAnswerRadioButton -> answerIndex = 3
-            }
+            val answerIndex = setAnswerIndex(checkedId)
             // The first answer in the original question is always the correct one, so if our
             // answer matches, we have the correct answer.
             if (answers[answerIndex] == currentQuestion.answers[0]) {
-                questionIndex++
-                // Advance to the next question
-                if (questionIndex < numQuestions) {
-                    advanceToNextQuestion(binding)
-                } else {
-                    // We've won!  Navigate to the gameWonFragment.
-                    view.findNavController()
-                        .navigate(R.id.action_gameFragment_to_gameWonFragment)
-                }
+                onCorrectAnswer(binding, view)
             } else {
                 // Game over! A wrong answer sends us to the gameOverFragment.
                 view.findNavController().navigate(R.id.action_gameFragment_to_gameOverFragment)
             }
+        }
+    }
+
+    private fun setAnswerIndex(checkedId: Int): Int {
+        return when (checkedId) {
+            R.id.secondAnswerRadioButton -> 1
+            R.id.thirdAnswerRadioButton -> 2
+            R.id.fourthAnswerRadioButton -> 3
+            else -> 0
+        }
+    }
+
+    private fun onCorrectAnswer(
+        binding: FragmentGameBinding,
+        view: View
+    ) {
+        questionIndex++
+        // Advance to the next question
+        if (questionIndex < numQuestions) {
+            advanceToNextQuestion(binding)
+        } else {
+            // We've won!  Navigate to the gameWonFragment.
+            view.findNavController()
+                .navigate(R.id.action_gameFragment_to_gameWonFragment)
         }
     }
 
